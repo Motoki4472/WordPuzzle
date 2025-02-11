@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Rule
     public class GameRule
     {
         private int[,] Board = new int[5,5];
-        private list <int[,,]> ConnectList = new list<int[,,]>();// (ひらがなの番号,x,y)
+        private List<int[,,]> ConnectList = new List<int[,,]>(); // (ひらがなの番号,x,y)
 
         //盤面の操作
         public void UpBoard()
