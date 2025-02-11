@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace WordBlock
+namespace Assets.WordBlock
 {
     public class WordBlockOnBoard
     {
@@ -15,12 +15,6 @@ namespace WordBlock
             BoardCoordinate[0] = x;
             BoardCoordinate[1] = y;
             Word = word;
-        }
-
-        public void SetBoardCoordinate(int x, int y)
-        {
-            BoardCoordinate[0] = x;
-            BoardCoordinate[1] = y;
         }
 
         public void SetWord(string word)
