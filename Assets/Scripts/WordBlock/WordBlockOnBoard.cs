@@ -9,17 +9,34 @@ namespace Assets.WordBlock
     {
         private int[] BoardCoordinate = new int[2];
         private string Word;
+        private int WordId;
 
         public WordBlockOnBoard(int x, int y, string word)
         {
             BoardCoordinate[0] = x;
             BoardCoordinate[1] = y;
-            Word = word;
+            Word = word;   
+            if (word != null)
+            {
+                WordId = (int)Word[0] - 97;
+            }
+            else
+            {
+                WordId = -1;
+            }
         }
 
         public void SetWord(string word)
         {
             Word = word;
+            if (word != null)
+            {
+                WordId = (int)Word[0] - 97;
+            }
+            else
+            {
+                WordId = -1;
+            }
         }
 
         
