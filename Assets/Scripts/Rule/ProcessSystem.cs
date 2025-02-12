@@ -22,6 +22,11 @@ namespace Assets.Rule
             Ready();
         }
 
+        public void Update()
+        {
+
+        }
+
         private void Ready()
         {
             //初期配置
@@ -90,6 +95,7 @@ namespace Assets.Rule
         public void SetProcessStateToEnd()
         {
             state = ProcessState.End;
+            Debug.Log("ゲーム終了");
         }
     }
 }
