@@ -1,9 +1,12 @@
 using UnityEngine;
 
-namespace Rule
+namespace Assets.Rule
 {
     public class ProcessSystem : MonoBehaviour
     {
+        private GameRule gameRule = default;
+        private ProcessState currentProcessState;
+        private ProcessState state;
         private enum ProcessState
         {
             Ready,
@@ -15,7 +18,84 @@ namespace Rule
 
         public void Start()
         {
-            ProcessState state = ProcessState.Ready;
+            state = ProcessState.Ready;
+            Ready();
+        }
+
+        public void Update()
+        {
+
+        }
+
+        private void Ready()
+        {
+            //初期配置
+            gameRule = new GameRule(this);
+            state = ProcessState.Running;
+            if (state == ProcessState.Running)
+            {
+                Debug.Log("ゲーム開始");
+            }
+        }
+
+        // 以下は入力用にカプセル化されたメソッド
+
+        public void Right()
+        {
+            if (state == ProcessState.Running)
+            {
+                state = ProcessState.Processing;
+                gameRule.RightBoard();
+            }
+        }
+
+        public void Left()
+        {
+            if (state == ProcessState.Running)
+            {
+                state = ProcessState.Processing;
+                gameRule.LeftBoard();
+            }
+        }
+
+        public void Up()
+        {
+            if (state == ProcessState.Running)
+            {
+                state = ProcessState.Processing;
+                gameRule.UpBoard();
+            }
+        }
+
+        public void Down()
+        {
+            if (state == ProcessState.Running)
+            {
+                state = ProcessState.Processing;
+                gameRule.DownBoard();
+            }
+        }
+
+        public void SetProcessStateToRunning()
+        {
+            state = ProcessState.Running;
+        }
+
+        public void SetProcessStateToStop()
+        {
+            currentProcessState = state;
+            state = ProcessState.Stop;
+        }
+
+        public void UnsetProcessStateToStop()
+        {
+            state = currentProcessState;
+        }
+
+        public void SetProcessStateToEnd()
+        {
+            state = ProcessState.End;
+            Debug.Log("ゲーム終了");
         }
     }
 }

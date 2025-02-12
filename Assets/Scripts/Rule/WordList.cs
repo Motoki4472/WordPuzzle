@@ -142,7 +142,7 @@ namespace Assets.WordBlock
         {
         }
 
-        public bool IsWord(string word)
+        public bool IsExistWord(string word)
         {
             return _WordList.ContainsKey(word);
         }

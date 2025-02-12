@@ -15,15 +15,7 @@ namespace Assets.WordBlock
         {
             BoardCoordinate[0] = x;
             BoardCoordinate[1] = y;
-            Word = word;   
-            if (word != null)
-            {
-                WordId = (int)Word[0] - 97;
-            }
-            else
-            {
-                WordId = -1;
-            }
+            SetWord(word);
         }
 
         public void SetWord(string word)
@@ -49,6 +41,11 @@ namespace Assets.WordBlock
         public string GetWord()
         {
             return Word;
+        }
+
+        public int GetWordId()
+        {
+            return WordId;
         }
 
 
