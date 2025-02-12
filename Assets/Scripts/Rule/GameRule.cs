@@ -291,6 +291,7 @@ namespace Assets.Rule
 
         private void DeleteWords()
         {
+            bool isCombo = false;
             // ConnectListを文字数多い順にソート
             ConnectList.Sort((a, b) => b.Length - a.Length);
             deleteList.Clear();
@@ -307,6 +308,7 @@ namespace Assets.Rule
                 }
                 if (WordList.IsExistWord(word))
                 {
+                    isCombo = true;
                     for (int j = 0; j < ConnectList[i].Length; j++)
                     {
                         // 重複を許さない
@@ -317,6 +319,14 @@ namespace Assets.Rule
                     }
                 }
             }
+            if(isCombo)
+            {
+                processSystem.AddComboCount();
+            }
+            else
+            {
+                processSystem.ResetComboCount();
+            }
 
             // 削除対象のリストを削除
             for (int i = 0; i < deleteList.Count; i++)
@@ -324,9 +334,14 @@ namespace Assets.Rule
                 if (deleteList[i] != null) // null チェックを追加
                 {
                     deleteList[i].SetWord(null);
+                    // score加算
+                    processSystem.AddWordCountFactor();
+                    processSystem.AddScore();
+
                     // 削除のアニメーションなどを入れる
                 }
             }
+            processSystem.ResetWordCountFactor();
         }
 
     }

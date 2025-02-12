@@ -5,6 +5,8 @@ namespace Assets.Rule
     public class ProcessSystem : MonoBehaviour
     {
         private GameRule gameRule = default;
+        private ScoreSystem scoreSystem = default;
+        private int turnCount = 0;
         private ProcessState currentProcessState;
         private ProcessState state;
         private enum ProcessState
@@ -29,8 +31,10 @@ namespace Assets.Rule
 
         private void Ready()
         {
-            //初期配置
             gameRule = new GameRule(this);
+            scoreSystem = new ScoreSystem();
+            scoreSystem.ResetAll();
+            turnCount = 1;
             state = ProcessState.Running;
             if (state == ProcessState.Running)
             {
@@ -44,6 +48,8 @@ namespace Assets.Rule
         {
             if (state == ProcessState.Running)
             {
+                turnCount++;
+                scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.RightBoard();
             }
@@ -53,6 +59,8 @@ namespace Assets.Rule
         {
             if (state == ProcessState.Running)
             {
+                turnCount++;
+                scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.LeftBoard();
             }
@@ -62,6 +70,8 @@ namespace Assets.Rule
         {
             if (state == ProcessState.Running)
             {
+                turnCount++;
+                scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.UpBoard();
             }
@@ -71,6 +81,8 @@ namespace Assets.Rule
         {
             if (state == ProcessState.Running)
             {
+                turnCount++;
+                scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.DownBoard();
             }
@@ -96,6 +108,48 @@ namespace Assets.Rule
         {
             state = ProcessState.End;
             Debug.Log("ゲーム終了");
+        }
+
+        // Score関係のメソッド
+
+        public int GetScore()
+        {
+            return scoreSystem.GetScore();
+        }
+
+        public int GetComboCount()
+        {
+            return scoreSystem.GetComboCount();
+        }
+
+        public void AddScore()
+        {
+            scoreSystem.AddScore();
+        }
+
+        public void AddComboCount()
+        {
+            scoreSystem.AddComboCount();
+        }
+
+        public void ResetComboCount()
+        {
+            scoreSystem.ResetComboCount();
+        }
+
+        public void AddWordCountFactor()
+        {
+            scoreSystem.AddWordCountFactor();
+        }
+
+        public void ResetWordCountFactor()
+        {
+            scoreSystem.ResetWordCountFactor();
+        }
+
+        public int GetTurnCount()
+        {
+            return turnCount;
         }
     }
 }
