@@ -45,6 +45,8 @@ namespace Assets.Rule
                 int wordId = Random.Range(0, 25);
                 string word = ((char)(wordId + 97)).ToString();
                 Board[RandomX, RandomY].SetWord(word);
+                int direction = Random.Range(0, 4);
+                processSystem.GenerateWordBlockOnBoard(RandomX, RandomY, word, direction);
             }
         }
 
@@ -80,17 +82,19 @@ namespace Assets.Rule
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i, j + 1].GetWord() != null)
+                        {
+                            processSystem.MoveWordBlockOnBoard(i, j + 1, 3);
+                        }
                         Board[i, j].SetWord(Board[i, j + 1].GetWord());
                         Board[i, j + 1].SetWord(null);
-
-                        // ここで上にずれるアニメーションを入れる
                     }
                 }
             }
             //最下段にランダムな文字を生成
 
             int RandomX = Random.Range(0, 5);
-            GenerateRandomWordBlock(RandomX, 4, true);
+            GenerateRandomWordBlock(RandomX, 4, true, 3);
 
             CheckConnect();
         }
@@ -106,17 +110,19 @@ namespace Assets.Rule
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i, j - 1].GetWord() != null)
+                        {
+                            processSystem.MoveWordBlockOnBoard(i, j - 1, 2);
+                        }
                         Board[i, j].SetWord(Board[i, j - 1].GetWord());
                         Board[i, j - 1].SetWord(null);
-
-                        // ここで下にずれるアニメーションを入れる
                     }
                 }
             }
 
             //最上段にランダムな文字を生成
             int RandomX = Random.Range(0, 5);
-            GenerateRandomWordBlock(RandomX, 0, true);
+            GenerateRandomWordBlock(RandomX, 0, true, 2);
             CheckConnect();
         }
 
@@ -129,17 +135,19 @@ namespace Assets.Rule
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i - 1, j].GetWord() != null)
+                        {
+                            processSystem.MoveWordBlockOnBoard(i - 1, j, 1);
+                        }
                         Board[i, j].SetWord(Board[i - 1, j].GetWord());
                         Board[i - 1, j].SetWord(null);
-
-                        // ここで右にずれるアニメーションを入れる
                     }
                 }
             }
 
             // 最左列にランダムな文字を生成
             int RandomY = Random.Range(0, 5);
-            GenerateRandomWordBlock(0, RandomY, false);
+            GenerateRandomWordBlock(0, RandomY, false, 0);
             CheckConnect();
         }
 
@@ -152,10 +160,12 @@ namespace Assets.Rule
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i + 1, j].GetWord() != null)
+                        {
+                            processSystem.MoveWordBlockOnBoard(i + 1, j, 0);
+                        }
                         Board[i, j].SetWord(Board[i + 1, j].GetWord());
                         Board[i + 1, j].SetWord(null);
-
-                        // ここで左にずれるアニメーションを入れる
                     }
                 }
             }
@@ -163,13 +173,14 @@ namespace Assets.Rule
             // 最右列にランダムな文字を生成
             // 置ける場所を探し続ける置けるとこがなければゲーム終了
             int RandomY = Random.Range(0, 5);
-            GenerateRandomWordBlock(4, RandomY, false);
+            GenerateRandomWordBlock(4, RandomY, false, 1);
 
             CheckConnect();
         }
 
-        private void GenerateRandomWordBlock(int x, int y, bool isRow)
+        private void GenerateRandomWordBlock(int x, int y, bool isRow, int direction)
         {
+            // 0:左 1:右 2:上 3:下
             while (Board[x, y].GetWord() != null)
             {
                 if (isRow)
@@ -193,6 +204,7 @@ namespace Assets.Rule
             int wordId = Random.Range(0, 25);
             string word = ((char)(wordId + 97)).ToString();
             Board[x, y].SetWord(word);
+            processSystem.GenerateWordBlockOnBoard(x, y, word, direction);
         }
 
         private void CheckGameEnd()
@@ -319,7 +331,7 @@ namespace Assets.Rule
                     }
                 }
             }
-            if(isCombo)
+            if (isCombo)
             {
                 processSystem.AddComboCount();
             }
@@ -327,6 +339,8 @@ namespace Assets.Rule
             {
                 processSystem.ResetComboCount();
             }
+
+            processSystem.DisappearWordBlockOnBoard(deleteList);
 
             // 削除対象のリストを削除
             for (int i = 0; i < deleteList.Count; i++)

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 
-namespace Assets.TitleButton
+namespace Assets.ButtonSystem
 {
     public class CommonButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -30,10 +30,22 @@ namespace Assets.TitleButton
                     iButton = new StartButton();
                     break;
                 case 1:
-                    iButton = new OptionButton();
+                    iButton = new SettingButton();
                     break;
                 case 2:
                     iButton = new CreditsButton();
+                    break;
+                case 3:
+                    iButton = new HamburgerMenu();
+                    break;
+                case 4:
+                    iButton = new SettingButtonInMainScene();
+                    break;
+                case 5:
+                    iButton = new TitleButton();
+                    break;
+                case 6:
+                    iButton = new ExitButton();
                     break;
             }
 

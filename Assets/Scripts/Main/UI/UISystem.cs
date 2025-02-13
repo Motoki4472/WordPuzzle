@@ -53,10 +53,10 @@ namespace Assets.UISystem
         {
             isAnimating = true; // アニメーション開始
 
-            // 全てのテキストをy軸に-35移動
             for (int i = 0; i < Words.Length; i++)
             {
-                Words[i].transform.DOMoveY(212.5071f + 64f - 35 * i, 0.5f);
+                // DOTWeenでローカル座標で90- 35 * iの位置に移動
+                Words[i].transform.DOLocalMoveY(90 - 35 * i, 0.5f);
             }
 
             // words[7]をフェードアウトさせつつテキストの内容を後ろの文字から1文字ずつ消去
@@ -90,8 +90,18 @@ namespace Assets.UISystem
             });
         }
 
+        public void Test()
+        {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.B))
+            {
+                SetWord("ABCDE");
+                SetWord("BBBBB");
+            }
+        }
+
         public void Update()
         {
+            Test();
             if (!isAnimating && InputWords.Count > 0) // リストが空でないことを確認
             {
                 SetWordToText(InputWords[0]);

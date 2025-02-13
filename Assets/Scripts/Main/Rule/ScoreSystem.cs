@@ -8,6 +8,22 @@ namespace Assets.Rule
         private float WordCountFactor = 1.0f;
         private float TurnCountFactor = 1.0f;
         private int ComboCount = 0;
+        private int addScore = 0;
+
+        public void ScoreUpdate()
+        {
+            if(addScore > 0)
+            {
+                score ++;
+                addScore --;
+            }
+
+            if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
+            {
+                addScore += 10;
+                Debug.Log("Space : " + addScore);
+            }
+        }
 
         public int GetScore()
         {
@@ -21,7 +37,7 @@ namespace Assets.Rule
 
         public void AddScore()
         {
-            score += (int)(100 * WordCountFactor * TurnCountFactor);
+            addScore += (int)(50 * WordCountFactor * TurnCountFactor);
         }
 
         public void AddComboCount()
@@ -60,6 +76,7 @@ namespace Assets.Rule
             WordCountFactor = 1.0f;
             TurnCountFactor = 1.0f;
             ComboCount = 0;
+            addScore = 0;
         }
 
 
