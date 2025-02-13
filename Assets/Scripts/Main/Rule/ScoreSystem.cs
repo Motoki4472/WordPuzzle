@@ -9,6 +9,7 @@ namespace Assets.Rule
         private float TurnCountFactor = 1.0f;
         private int ComboCount = 0;
         private int addScore = 0;
+        private const string HighScoreKey = "HighScore";
 
         public void ScoreUpdate()
         {
@@ -23,6 +24,8 @@ namespace Assets.Rule
                 addScore += 10;
                 Debug.Log("Space : " + addScore);
             }
+
+            SaveHighScore();
         }
 
         public int GetScore()
@@ -77,8 +80,27 @@ namespace Assets.Rule
             TurnCountFactor = 1.0f;
             ComboCount = 0;
             addScore = 0;
+            SaveHighScore();
         }
 
+        public void SaveHighScore()
+        {
+            int highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+            if (score > highScore)
+            {
+                PlayerPrefs.SetInt(HighScoreKey, score);
+                PlayerPrefs.Save();
+            }
+        }
 
+        public int GetHighScore()
+        {
+            return PlayerPrefs.GetInt(HighScoreKey, 0);
+        }
+
+        public void ResetHighScore()
+        {
+            PlayerPrefs.DeleteKey(HighScoreKey);
+        }
     }
 }

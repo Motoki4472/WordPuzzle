@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Rule;
+using DG.Tweening;
 
 namespace Assets.WordBlock
 {
@@ -11,7 +12,7 @@ namespace Assets.WordBlock
         private GameObject[,] wordBlockOnBoard = new GameObject[5,5];
         private Vector2[,] wordBlockPosition = new Vector2[5,5];
 
-        public void Start()
+        public void Awake()
         {
             for (int x = 0; x < 5; x++)
             {
@@ -53,21 +54,22 @@ namespace Assets.WordBlock
             }
         }
 
-        public void MoveWordBlockOnBoard(int x, int y, int direction)
+        public Tween MoveWordBlockOnBoard(int x, int y, int direction)
         {
             if (wordBlockOnBoard[x, y] == null)
             {
                 Debug.LogError($"No word block found at position ({x}, {y})");
-                return;
+                return null;
             }
 
+            Tween moveTween = null;
             switch (direction)
             {
                 // 左右上下
                 case 0:
                     if (x > 0 && wordBlockOnBoard[x - 1, y] == null)
                     {
-                        wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x - 1, y]);
+                        moveTween = wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x - 1, y]);
                         wordBlockOnBoard[x - 1, y] = wordBlockOnBoard[x, y];
                         wordBlockOnBoard[x, y] = null;
                     }
@@ -75,7 +77,7 @@ namespace Assets.WordBlock
                 case 1:
                     if (x < 4 && wordBlockOnBoard[x + 1, y] == null)
                     {
-                        wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x + 1, y]);
+                        moveTween = wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x + 1, y]);
                         wordBlockOnBoard[x + 1, y] = wordBlockOnBoard[x, y];
                         wordBlockOnBoard[x, y] = null;
                     }
@@ -83,7 +85,7 @@ namespace Assets.WordBlock
                 case 2:
                     if (y < 4 && wordBlockOnBoard[x, y + 1] == null)
                     {
-                        wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x, y + 1]);
+                        moveTween = wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x, y + 1]);
                         wordBlockOnBoard[x, y + 1] = wordBlockOnBoard[x, y];
                         wordBlockOnBoard[x, y] = null;
                     }
@@ -91,12 +93,14 @@ namespace Assets.WordBlock
                 case 3:
                     if (y > 0 && wordBlockOnBoard[x, y - 1] == null)
                     {
-                        wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x, y - 1]);
+                        moveTween = wordBlockOnBoard[x, y].GetComponent<WordBlockPrefab>().MoveAnimation(wordBlockPosition[x, y - 1]);
                         wordBlockOnBoard[x, y - 1] = wordBlockOnBoard[x, y];
                         wordBlockOnBoard[x, y] = null;
                     }
                     break;
             }
+
+            return moveTween;
         }
     }
 }

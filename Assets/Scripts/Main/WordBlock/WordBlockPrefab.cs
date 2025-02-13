@@ -10,48 +10,46 @@ namespace Assets.WordBlock
         [SerializeField] private TMP_Text text;
         public void Initialize(string word)
         {
-            text.text = word;
+            // 大文字にして表示
+            text.text = word.ToUpper();
         }
 
         // 各アニメーション(生成、選択、消滅、移動、壁にぶつかる)
-        public void GenerateAnimation(int direction, Vector2 targetPosition)
+        public Tween GenerateAnimation(int direction, Vector2 targetPosition)
         {
-            text.DOFade(1, 1.0f).From(0);
+            text.DOFade(1, 0.6f).From(0);
             Vector3 Offset = Vector3.zero;
             switch (direction)
             {
-                case 0: Offset = Vector3.left * 100; break;
-                case 1: Offset = Vector3.right * 100; break;
-                case 2: Offset = Vector3.up * 100; break;
-                case 3: Offset = Vector3.down * 100; break;
+                case 0: Offset = Vector3.left * 50; break;
+                case 1: Offset = Vector3.right * 50; break;
+                case 2: Offset = Vector3.up * 50; break;
+                case 3: Offset = Vector3.down * 50; break;
             }
             transform.position += Offset;
-            transform.DOLocalMove(targetPosition, 1.0f);
-
+            return transform.DOLocalMove(targetPosition, 0.6f);
         }
 
-        public void SelectAnimation()
+        public Tween SelectAnimation()
         {
-            Sequence sequence = DOTween.Sequence();
-            sequence.Append(text.DOColor(Color.yellow, 0.5f));
-            sequence.Join(transform.DOScale(1.2f, 0.5f));
-            sequence.Join(transform.DOMoveY(transform.position.y + 10, 0.5f));
+            text.DOColor(Color.yellow, 2f);
+            transform.DOScale(1.1f, 0.3f);
+            return transform.DOMoveY(transform.position.y + 5, 0.3f);
         }
 
         public Tween DisappearAnimation()
         {
-            return text.DOFade(0, 1.0f).OnComplete(() =>
+            return text.DOFade(0, 0.3f).OnComplete(() =>
             {
                 Destroy(gameObject);
             });
         }
-        public void MoveAnimation(Vector3 targetPosition)
+        public Tween MoveAnimation(Vector3 targetPosition)
         {
-            transform.DOLocalMove(targetPosition, 1.0f);
-            Debug.Log("Move");
+            return transform.DOLocalMove(targetPosition, 0.6f);
         }
 
-        public void HitWallAnimation(int wallType)
+        public Tween HitWallAnimation(int wallType)
         {
             Vector3 direction = Vector3.zero;
             switch (wallType)
@@ -65,6 +63,7 @@ namespace Assets.WordBlock
             sequence.Append(transform.DOMove(transform.position + direction * 10, 0.2f));
             sequence.Append(transform.DOMove(transform.position, 0.2f));
             sequence.Join(transform.DOShakePosition(0.2f, 10, 10));
+            return sequence;
         }
     }
 }

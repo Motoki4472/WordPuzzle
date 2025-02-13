@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Assets.UISystem;
 using Assets.WordBlock;
+using DG.Tweening;
 
 namespace Assets.Rule
 {
@@ -36,6 +37,7 @@ namespace Assets.Rule
                 scoreSystem.ScoreUpdate();
                 uiSystem.SetScoreText(scoreSystem.GetScore());
                 uiSystem.SetTurnText(turnCount);
+                uiSystem.SetHighScoreText(scoreSystem.GetHighScore());
             }
         }
 
@@ -162,6 +164,11 @@ namespace Assets.Rule
             return turnCount;
         }
 
+        public void AddDeletedWord(string word)
+        {
+            uiSystem.SetWord(word);
+        }
+
         // アニメーション関連のメソッド
         public void GenerateWordBlockOnBoard(int x, int y, string word,int direction)
         {
@@ -173,9 +180,11 @@ namespace Assets.Rule
             generateWordBlock.DisappearWordBlockOnBoard(deleteList);
         }
 
-        public void MoveWordBlockOnBoard(int x, int y, int direction)
+        public Tween MoveWordBlockOnBoard(int x, int y, int direction)
         {
-            generateWordBlock.MoveWordBlockOnBoard(x, y, direction);
+            return generateWordBlock.MoveWordBlockOnBoard(x, y, direction);
         }
+
+
     }
 }

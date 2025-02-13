@@ -42,6 +42,7 @@ namespace Assets.UISystem
 
         public void SetWord(string Word)
         {
+            Word = Word.ToUpper();
             InputWords.Add(Word);
             if (!isAnimating) // アニメーション中でない場合のみ実行
             {
