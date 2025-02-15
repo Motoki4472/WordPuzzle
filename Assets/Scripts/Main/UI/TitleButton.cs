@@ -1,13 +1,25 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace Assets.ButtonSystem
 {
     public class TitleButton : ITitleButton
     {
+        public GameObject loadNextScenePrefab;
+
         public void OnClick()
         {
-            // タイトル画面に遷移
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Develop/Title");
+            loadNextScenePrefab = Resources.Load<GameObject>("Prefab/LoadNextScene");
+
+            GameObject loadNextScene = GameObject.Instantiate(loadNextScenePrefab, GameObject.Find("Canvas").transform);
+            loadNextScene.transform.SetAsLastSibling();
+
+            CanvasGroup canvasGroup = loadNextScene.GetComponent<CanvasGroup>();
+            canvasGroup.alpha = 0;
+            loadNextScene.GetComponent<CanvasGroup>().DOFade(1, 1f).OnComplete(() =>
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Develop/Title");
+            });
         }
     }
 }
