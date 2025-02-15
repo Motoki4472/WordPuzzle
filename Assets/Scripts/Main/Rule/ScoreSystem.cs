@@ -8,6 +8,25 @@ namespace Assets.Rule
         private float WordCountFactor = 1.0f;
         private float TurnCountFactor = 1.0f;
         private int ComboCount = 0;
+        private int addScore = 0;
+        private const string HighScoreKey = "HighScore";
+
+        public void ScoreUpdate()
+        {
+            if(addScore > 0)
+            {
+                score ++;
+                addScore --;
+            }
+
+            if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
+            {
+                addScore += 10;
+                Debug.Log("Space : " + addScore);
+            }
+
+            SaveHighScore();
+        }
 
         public int GetScore()
         {
@@ -21,7 +40,7 @@ namespace Assets.Rule
 
         public void AddScore()
         {
-            score += (int)(100 * WordCountFactor * TurnCountFactor);
+            addScore += (int)(50 * WordCountFactor * TurnCountFactor);
         }
 
         public void AddComboCount()
@@ -60,8 +79,28 @@ namespace Assets.Rule
             WordCountFactor = 1.0f;
             TurnCountFactor = 1.0f;
             ComboCount = 0;
+            addScore = 0;
+            SaveHighScore();
         }
 
+        public void SaveHighScore()
+        {
+            int highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+            if (score > highScore)
+            {
+                PlayerPrefs.SetInt(HighScoreKey, score);
+                PlayerPrefs.Save();
+            }
+        }
 
+        public int GetHighScore()
+        {
+            return PlayerPrefs.GetInt(HighScoreKey, 0);
+        }
+
+        public void ResetHighScore()
+        {
+            PlayerPrefs.DeleteKey(HighScoreKey);
+        }
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.TitleButton
+namespace Assets.ButtonSystem
 {
     public interface ITitleButton
     {

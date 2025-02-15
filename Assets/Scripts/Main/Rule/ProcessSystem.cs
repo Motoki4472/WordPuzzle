@@ -1,9 +1,15 @@
 using UnityEngine;
+using System.Collections.Generic;
+using Assets.UISystem;
+using Assets.WordBlock;
+using DG.Tweening;
 
 namespace Assets.Rule
 {
     public class ProcessSystem : MonoBehaviour
     {
+        [SerializeField] private Assets.UISystem.UISystem uiSystem = default;
+        [SerializeField] private GenerateWordBlock generateWordBlock = default;
         private GameRule gameRule = default;
         private ScoreSystem scoreSystem = default;
         private int turnCount = 0;
@@ -26,7 +32,13 @@ namespace Assets.Rule
 
         public void Update()
         {
-
+            if (state != ProcessState.Stop)
+            {
+                scoreSystem.ScoreUpdate();
+                uiSystem.SetScoreText(scoreSystem.GetScore());
+                uiSystem.SetTurnText(turnCount);
+                uiSystem.SetHighScoreText(scoreSystem.GetHighScore());
+            }
         }
 
         private void Ready()
@@ -34,7 +46,7 @@ namespace Assets.Rule
             gameRule = new GameRule(this);
             scoreSystem = new ScoreSystem();
             scoreSystem.ResetAll();
-            turnCount = 1;
+            turnCount = 0;
             state = ProcessState.Running;
             if (state == ProcessState.Running)
             {
@@ -151,5 +163,28 @@ namespace Assets.Rule
         {
             return turnCount;
         }
+
+        public void AddDeletedWord(string word)
+        {
+            uiSystem.SetWord(word);
+        }
+
+        // アニメーション関連のメソッド
+        public void GenerateWordBlockOnBoard(int x, int y, string word,int direction)
+        {
+            generateWordBlock.GenerateWordBlockOnBoard(x, y, word, direction);
+        }
+
+        public void DisappearWordBlockOnBoard(List<WordBlockOnBoard> deleteList)
+        {
+            generateWordBlock.DisappearWordBlockOnBoard(deleteList);
+        }
+
+        public Tween MoveWordBlockOnBoard(int x, int y, int direction)
+        {
+            return generateWordBlock.MoveWordBlockOnBoard(x, y, direction);
+        }
+
+
     }
 }

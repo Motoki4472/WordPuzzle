@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Assets.TitleButton
+namespace Assets.ButtonSystem
 {
-    public class OptionButton : ITitleButton
+    public class SettingButton : ITitleButton
     {
         public void OnClick()
         {

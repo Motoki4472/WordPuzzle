@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.WordBlock;
+using DG.Tweening;
 using Random = UnityEngine.Random;
 
 namespace Assets.Rule
@@ -45,6 +46,8 @@ namespace Assets.Rule
                 int wordId = Random.Range(0, 25);
                 string word = ((char)(wordId + 97)).ToString();
                 Board[RandomX, RandomY].SetWord(word);
+                int direction = Random.Range(0, 4);
+                processSystem.GenerateWordBlockOnBoard(RandomX, RandomY, word, direction);
             }
         }
 
@@ -55,7 +58,6 @@ namespace Assets.Rule
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    //raw[i] += Board[j, i].GetBoardCoordinate()[0] + "," + Board[i, j].GetBoardCoordinate()[1] + " ";
                     if (Board[j, i].GetWord() == null)
                     {
                         raw[i] += "[]";
@@ -73,103 +75,106 @@ namespace Assets.Rule
         public void UpBoard()
         {
             // 左上から右下に向かって探索
-
+            Sequence sequence = DOTween.Sequence();
             for (int j = 0; j < 4; j++)
             {
                 for (int i = 0; i < 5; i++)
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i, j + 1].GetWord() != null)
+                        {
+                            sequence.Join(processSystem.MoveWordBlockOnBoard(i, j + 1, 3));
+                        }
                         Board[i, j].SetWord(Board[i, j + 1].GetWord());
                         Board[i, j + 1].SetWord(null);
-
-                        // ここで上にずれるアニメーションを入れる
                     }
                 }
             }
             //最下段にランダムな文字を生成
-
             int RandomX = Random.Range(0, 5);
-            GenerateRandomWordBlock(RandomX, 4, true);
-
-            CheckConnect();
+            sequence.AppendCallback(() => GenerateRandomWordBlock(RandomX, 4, true, 3));
+            sequence.OnComplete(() => CheckConnect());
         }
 
         public void DownBoard()
         {
-
-            //　左下から右上に向かって探索
-
+            // 左下から右上に向かって探索
+            Sequence sequence = DOTween.Sequence();
             for (int j = 4; j > 0; j--)
             {
                 for (int i = 0; i < 5; i++)
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i, j - 1].GetWord() != null)
+                        {
+                            sequence.Join(processSystem.MoveWordBlockOnBoard(i, j - 1, 2));
+                        }
                         Board[i, j].SetWord(Board[i, j - 1].GetWord());
                         Board[i, j - 1].SetWord(null);
-
-                        // ここで下にずれるアニメーションを入れる
                     }
                 }
             }
-
             //最上段にランダムな文字を生成
             int RandomX = Random.Range(0, 5);
-            GenerateRandomWordBlock(RandomX, 0, true);
-            CheckConnect();
+            sequence.AppendCallback(() => GenerateRandomWordBlock(RandomX, 0, true, 2));
+            sequence.OnComplete(() => CheckConnect());
         }
 
         public void RightBoard()
         {
             // 右上から左下に向かって探索
+            Sequence sequence = DOTween.Sequence();
             for (int i = 4; i > 0; i--)
             {
                 for (int j = 0; j < 5; j++)
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i - 1, j].GetWord() != null)
+                        {
+                            sequence.Join(processSystem.MoveWordBlockOnBoard(i - 1, j, 1));
+                        }
                         Board[i, j].SetWord(Board[i - 1, j].GetWord());
                         Board[i - 1, j].SetWord(null);
-
-                        // ここで右にずれるアニメーションを入れる
                     }
                 }
             }
-
             // 最左列にランダムな文字を生成
             int RandomY = Random.Range(0, 5);
-            GenerateRandomWordBlock(0, RandomY, false);
-            CheckConnect();
+            sequence.AppendCallback(() => GenerateRandomWordBlock(0, RandomY, false, 0));
+            sequence.OnComplete(() => CheckConnect());
         }
 
         public void LeftBoard()
         {
             //左上から下に探索、右にずれて右下まで探索
+            Sequence sequence = DOTween.Sequence();
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 5; j++)
                 {
                     if (Board[i, j].GetWord() == null)
                     {
+                        if (Board[i + 1, j].GetWord() != null)
+                        {
+                            sequence.Join(processSystem.MoveWordBlockOnBoard(i + 1, j, 0));
+                        }
                         Board[i, j].SetWord(Board[i + 1, j].GetWord());
                         Board[i + 1, j].SetWord(null);
-
-                        // ここで左にずれるアニメーションを入れる
                     }
                 }
             }
-
             // 最右列にランダムな文字を生成
-            // 置ける場所を探し続ける置けるとこがなければゲーム終了
             int RandomY = Random.Range(0, 5);
-            GenerateRandomWordBlock(4, RandomY, false);
-
-            CheckConnect();
+            sequence.AppendCallback(() => GenerateRandomWordBlock(4, RandomY, false, 1));
+            sequence.OnComplete(() => CheckConnect());
         }
 
-        private void GenerateRandomWordBlock(int x, int y, bool isRow)
+        private void GenerateRandomWordBlock(int x, int y, bool isRow, int direction)
         {
+            // 0:左 1:右 2:上 3:下
             while (Board[x, y].GetWord() != null)
             {
                 if (isRow)
@@ -193,6 +198,7 @@ namespace Assets.Rule
             int wordId = Random.Range(0, 25);
             string word = ((char)(wordId + 97)).ToString();
             Board[x, y].SetWord(word);
+            processSystem.GenerateWordBlockOnBoard(x, y, word, direction);
         }
 
         private void CheckGameEnd()
@@ -233,34 +239,48 @@ namespace Assets.Rule
                 }
             }
 
-
-            DeleteWords();
-            processSystem.SetProcessStateToRunning();
-            CheckGameEnd();
-            DebugLogBoard();
-
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendCallback(() => DeleteWords());
+            sequence.OnComplete(() =>
+            {
+                processSystem.SetProcessStateToRunning();
+                CheckGameEnd();
+                DebugLogBoard();
+            });
         }
 
         // 横方向のつながりの検査
         private void CheckConnectHorizontal(int y)
         {
-            int connectCount = 0;
-            WordBlockOnBoard[] connect = new WordBlockOnBoard[5];
-            for (int i = 0; i < 5; i++)
+            for(int i = 0;i < 5;i++)
             {
-                connectCount++;
-                if (Board[i, y].GetWord() == null)
+                string word = "";
+                WordBlockOnBoard[] connect = new WordBlockOnBoard[5];
+                for(int j = i;j < 5;j++)
                 {
-                    connectCount = 0;
-                    connect = new WordBlockOnBoard[5];
-                }
-                if (connectCount >= 2)
-                {
-                    for (int j = 0; j < connectCount; j++)
+                    if(Board[j,y].GetWord() == null || Board[i,y].GetWord() == null)
                     {
-                        connect[j] = Board[i - connectCount + j + 1, y];
+                        break;
                     }
+                    word += Board[j, y].GetWord();
+                    connect[j - i] = Board[j, y];
+                }
+                if(word.Length >= 2)
+                {
                     ConnectList.Add(connect);
+                }
+            }
+
+            //listの重複を削除
+            for(int i = 0;i < ConnectList.Count;i++)
+            {
+                for(int j = i + 1;j < ConnectList.Count;j++)
+                {
+                    if(ConnectList[i] == ConnectList[j])
+                    {
+                        ConnectList.RemoveAt(j);
+                        j--;
+                    }
                 }
             }
         }
@@ -268,23 +288,35 @@ namespace Assets.Rule
         // 縦方向のつながりの検査
         private void CheckConnectVertical(int x)
         {
-            int connectCount = 0;
-            WordBlockOnBoard[] connect = new WordBlockOnBoard[5];
             for (int i = 0; i < 5; i++)
             {
-                connectCount++;
-                if (Board[x, i].GetWord() == null)
+                string word = "";
+                WordBlockOnBoard[] connect = new WordBlockOnBoard[5];
+                for (int j = i; j < 5; j++)
                 {
-                    connectCount = 0;
-                    connect = new WordBlockOnBoard[5];
-                }
-                if (connectCount >= 2)
-                {
-                    for (int j = 0; j < connectCount; j++)
+                    if (Board[x, j].GetWord() == null || Board[x, i].GetWord() == null)
                     {
-                        connect[j] = Board[x, i - connectCount + j + 1];
+                        break;
                     }
+                    word += Board[x, j].GetWord();
+                    connect[j - i] = Board[x, j];
+                }
+                if (word.Length >= 2)
+                {
                     ConnectList.Add(connect);
+                }
+            }
+
+            // listの重複を削除
+            for (int i = 0; i < ConnectList.Count; i++)
+            {
+                for (int j = i + 1; j < ConnectList.Count; j++)
+                {
+                    if (ConnectList[i] == ConnectList[j])
+                    {
+                        ConnectList.RemoveAt(j);
+                        j--;
+                    }
                 }
             }
         }
@@ -309,6 +341,7 @@ namespace Assets.Rule
                 if (WordList.IsExistWord(word))
                 {
                     isCombo = true;
+                    processSystem.AddDeletedWord(word);
                     for (int j = 0; j < ConnectList[i].Length; j++)
                     {
                         // 重複を許さない
@@ -319,7 +352,7 @@ namespace Assets.Rule
                     }
                 }
             }
-            if(isCombo)
+            if (isCombo)
             {
                 processSystem.AddComboCount();
             }
@@ -327,6 +360,8 @@ namespace Assets.Rule
             {
                 processSystem.ResetComboCount();
             }
+
+            processSystem.DisappearWordBlockOnBoard(deleteList);
 
             // 削除対象のリストを削除
             for (int i = 0; i < deleteList.Count; i++)
