@@ -12,7 +12,7 @@ namespace Assets.UISystem
         [SerializeField] private TMP_Text turnText = default;
         [SerializeField] private TMP_Text[] Words = new TMP_Text[8];
         private List<string> InputWords = new List<string>();
-        private bool isAnimating = false; // フラグを追加
+        private bool isAnimating = false;
 
         public void Start()
         {
@@ -53,7 +53,6 @@ namespace Assets.UISystem
         private void SetWordToText(string Word)
         {
             isAnimating = true; // アニメーション開始
-
             for (int i = 0; i < Words.Length; i++)
             {
                 // DOTWeenでローカル座標で90- 35 * iの位置に移動
@@ -91,18 +90,9 @@ namespace Assets.UISystem
             });
         }
 
-        public void Test()
-        {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.B))
-            {
-                SetWord("ABCDE");
-                SetWord("BBBBB");
-            }
-        }
 
         public void Update()
         {
-            Test();
             if (!isAnimating && InputWords.Count > 0) // リストが空でないことを確認
             {
                 SetWordToText(InputWords[0]);

@@ -27,7 +27,7 @@ namespace Assets.WordBlock
                 case 3: Offset = Vector3.down * 50; break;
             }
             transform.position += Offset;
-            return transform.DOLocalMove(targetPosition, 0.6f);
+            return transform.DOLocalMove(targetPosition, 0.4f);
         }
 
         public Tween SelectAnimation()
@@ -46,7 +46,7 @@ namespace Assets.WordBlock
         }
         public Tween MoveAnimation(Vector3 targetPosition)
         {
-            return transform.DOLocalMove(targetPosition, 0.6f);
+            return transform.DOLocalMove(targetPosition, 0.4f);
         }
 
         public Tween HitWallAnimation(int wallType)

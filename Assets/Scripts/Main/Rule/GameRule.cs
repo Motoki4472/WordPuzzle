@@ -239,12 +239,14 @@ namespace Assets.Rule
                 }
             }
 
-
-            DeleteWords();
-            processSystem.SetProcessStateToRunning();
-            CheckGameEnd();
-            DebugLogBoard();
-
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendCallback(() => DeleteWords());
+            sequence.OnComplete(() =>
+            {
+                processSystem.SetProcessStateToRunning();
+                CheckGameEnd();
+                DebugLogBoard();
+            });
         }
 
         // 横方向のつながりの検査
