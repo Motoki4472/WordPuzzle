@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using Assets.UISystem;
 using Assets.WordBlock;
 using DG.Tweening;
+using Assets.Result;
 
 namespace Assets.Rule
 {
@@ -10,6 +12,7 @@ namespace Assets.Rule
     {
         [SerializeField] private Assets.UISystem.UISystem uiSystem = default;
         [SerializeField] private GenerateWordBlock generateWordBlock = default;
+        [SerializeField] private GameObject EndGameEffect = default;
         private GameRule gameRule = default;
         private ScoreSystem scoreSystem = default;
         private int turnCount = 0;
@@ -52,6 +55,21 @@ namespace Assets.Rule
             {
                 Debug.Log("ゲーム開始");
             }
+        }
+
+        private void GameOver()
+        {
+            SceneManager.sceneLoaded += GameSceneLoaded;
+            SceneManager.LoadScene("Scenes/Develop/Result");
+
+        }
+
+        private void GameSceneLoaded(Scene next, LoadSceneMode mode)
+        {
+            var ChangeResultText = GameObject.Find("ChangeResultText").GetComponent<ChangeResultText>();
+            ChangeResultText.score = scoreSystem.GetScore();
+            ChangeResultText.turn = turnCount;
+            SceneManager.sceneLoaded -= GameSceneLoaded;
         }
 
         // 以下は入力用にカプセル化されたメソッド
@@ -120,6 +138,8 @@ namespace Assets.Rule
         {
             state = ProcessState.End;
             Debug.Log("ゲーム終了");
+            EndGameEffect.transform.localPosition = new Vector3(0, 0, 0);
+            EndGameEffect.GetComponent<CanvasGroup>().DOFade(1, 0.3f).OnComplete(() => GameOver());
         }
 
         // Score関係のメソッド

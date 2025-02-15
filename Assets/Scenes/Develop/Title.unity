@@ -205,7 +205,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 1.5
+  delay: 2
   duration: 1
   easeType: 6
   easeCurve:
@@ -425,7 +425,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+  m_Color: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -632,7 +632,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 2
+  delay: 2.5
   duration: 1.2
   easeType: 6
   easeCurve:
@@ -671,7 +671,7 @@ MonoBehaviour:
   isValid: 1
   target: {fileID: 294644529}
   animationType: 7
-  targetType: 3
+  targetType: 15
   forcedTargetType: 0
   autoPlay: 1
   useTargetAsV3: 0
@@ -1184,7 +1184,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 2.5
+  delay: 3
   duration: 1
   easeType: 6
   easeCurve:
@@ -1442,7 +1442,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 3
+  delay: 3.5
   duration: 1.2
   easeType: 6
   easeCurve:
@@ -1481,7 +1481,7 @@ MonoBehaviour:
   isValid: 1
   target: {fileID: 988792133}
   animationType: 7
-  targetType: 3
+  targetType: 15
   forcedTargetType: 0
   autoPlay: 1
   useTargetAsV3: 0
@@ -1688,7 +1688,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 0
+  delay: 0.5
   duration: 1.5
   easeType: 6
   easeCurve:
@@ -1727,7 +1727,7 @@ MonoBehaviour:
   isValid: 1
   target: {fileID: 1213743356}
   animationType: 7
-  targetType: 3
+  targetType: 15
   forcedTargetType: 0
   autoPlay: 1
   useTargetAsV3: 0
@@ -1859,6 +1859,52 @@ MonoBehaviour:
   optionalScrambleMode: 0
   optionalShakeRandomnessMode: 0
   optionalString: 
+--- !u!1 &1348877641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1348877643}
+  - component: {fileID: 1348877642}
+  m_Layer: 0
+  m_Name: LoardScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1348877642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1348877641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614739c2186408f448e9271a499e3e38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loardNextScenePrefab: {fileID: 6878903167706807374, guid: adc3191f964fd0047a86f62f6b60afda, type: 3}
+  canvas: {fileID: 457450561}
+--- !u!4 &1348877643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1348877641}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 594.96124, y: 141.01935, z: 0.32560557}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1401840968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2041,7 +2087,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 2.5
+  delay: 3
   duration: 1.2
   easeType: 6
   easeCurve:
@@ -2080,7 +2126,7 @@ MonoBehaviour:
   isValid: 1
   target: {fileID: 1401840970}
   animationType: 7
-  targetType: 3
+  targetType: 15
   forcedTargetType: 0
   autoPlay: 1
   useTargetAsV3: 0
@@ -2272,7 +2318,7 @@ MonoBehaviour:
   targetIsSelf: 1
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
-  delay: 2
+  delay: 2.5
   duration: 1
   easeType: 6
   easeCurve:
@@ -2356,3 +2402,4 @@ SceneRoots:
   - {fileID: 457450562}
   - {fileID: 756049023}
   - {fileID: 258389608}
+  - {fileID: 1348877643}
