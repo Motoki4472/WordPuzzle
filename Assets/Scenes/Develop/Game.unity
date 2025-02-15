@@ -654,6 +654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 91053663}
   - component: {fileID: 91053664}
+  - component: {fileID: 91053665}
   m_Layer: 5
   m_Name: SEVolume
   m_TagString: Untagged
@@ -728,25 +729,27 @@ MonoBehaviour:
   m_FillRect: {fileID: 273900578}
   m_HandleRect: {fileID: 987384424}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 1e-25
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3987874971960782873, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
-        m_TargetAssemblyTypeName: UnityEditor.Audio.AudioMixerGroupController, UnityEditor.CoreModule
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &91053665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91053662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79db6193fa2240e47bd8e49bf4912fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixerGroup: {fileID: 3987874971960782873, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
+  parameterName: SE
 --- !u!1 &93608941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,6 +1335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 332629255}
   - component: {fileID: 332629256}
+  - component: {fileID: 332629257}
   m_Layer: 5
   m_Name: BGMVolume
   m_TagString: Untagged
@@ -1406,25 +1410,27 @@ MonoBehaviour:
   m_FillRect: {fileID: 940225596}
   m_HandleRect: {fileID: 1000791013}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 1e-25
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4402480649583670021, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
-        m_TargetAssemblyTypeName: UnityEditor.Audio.AudioMixerGroupController, UnityEditor.CoreModule
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &332629257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332629254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79db6193fa2240e47bd8e49bf4912fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixerGroup: {fileID: 4402480649583670021, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
+  parameterName: BGM
 --- !u!1 &359792173
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,6 +1577,7 @@ GameObject:
   m_Component:
   - component: {fileID: 363062211}
   - component: {fileID: 363062212}
+  - component: {fileID: 363062213}
   m_Layer: 5
   m_Name: MasterVolume
   m_TagString: Untagged
@@ -1645,25 +1652,27 @@ MonoBehaviour:
   m_FillRect: {fileID: 513778236}
   m_HandleRect: {fileID: 554651302}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 1e-25
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 24300002, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
-        m_TargetAssemblyTypeName: UnityEditor.Audio.AudioMixerGroupController, UnityEditor.CoreModule
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &363062213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363062210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79db6193fa2240e47bd8e49bf4912fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixerGroup: {fileID: 24300002, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
+  parameterName: Master
 --- !u!1 &458975131
 GameObject:
   m_ObjectHideFlags: 0
