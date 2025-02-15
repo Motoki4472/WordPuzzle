@@ -13,6 +13,10 @@ namespace Assets.Rule
         [SerializeField] private Assets.UISystem.UISystem uiSystem = default;
         [SerializeField] private GenerateWordBlock generateWordBlock = default;
         [SerializeField] private GameObject EndGameEffect = default;
+        [SerializeField] private AudioSource audioSource; // 追加
+        [SerializeField] private AudioClip moveSE; // 追加
+        [SerializeField] private AudioClip generateSE; // 追加
+        [SerializeField] private AudioClip disappearSE; // 追加
         private GameRule gameRule = default;
         private ScoreSystem scoreSystem = default;
         private int turnCount = 0;
@@ -82,6 +86,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.RightBoard();
+                PlayMoveSE(); // 追加
             }
         }
 
@@ -93,6 +98,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.LeftBoard();
+                PlayMoveSE(); // 追加
             }
         }
 
@@ -104,6 +110,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.UpBoard();
+                PlayMoveSE(); // 追加
             }
         }
 
@@ -115,6 +122,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.DownBoard();
+                PlayMoveSE(); // 追加
             }
         }
 
@@ -193,11 +201,16 @@ namespace Assets.Rule
         public void GenerateWordBlockOnBoard(int x, int y, string word,int direction)
         {
             generateWordBlock.GenerateWordBlockOnBoard(x, y, word, direction);
+            PlayGenerateSE(); // 追加
         }
 
         public void DisappearWordBlockOnBoard(List<WordBlockOnBoard> deleteList)
         {
             generateWordBlock.DisappearWordBlockOnBoard(deleteList);
+            if(deleteList.Count > 0)
+            {
+                PlayDisappearSE(); // 追加
+            }
         }
 
         public Tween MoveWordBlockOnBoard(int x, int y, int direction)
@@ -205,6 +218,28 @@ namespace Assets.Rule
             return generateWordBlock.MoveWordBlockOnBoard(x, y, direction);
         }
 
+        private void PlayMoveSE() // 追加
+        {
+            if (audioSource != null && moveSE != null)
+            {
+                audioSource.PlayOneShot(moveSE);
+            }
+        }
 
+        private void PlayGenerateSE() // 追加
+        {
+            if (audioSource != null && generateSE != null)
+            {
+                audioSource.PlayOneShot(generateSE);
+            }
+        }
+
+        private void PlayDisappearSE() // 追加
+        {
+            if (audioSource != null && disappearSE != null)
+            {
+                audioSource.PlayOneShot(disappearSE);
+            }
+        }
     }
 }

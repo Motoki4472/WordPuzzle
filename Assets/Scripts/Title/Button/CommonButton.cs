@@ -10,6 +10,9 @@ namespace Assets.ButtonSystem
         private Button button;
         private CanvasGroup canvasGroup;
         [SerializeField] private int buttonType;
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip mouseOverSE;
+        [SerializeField] private AudioClip clickSE;
         private ITitleButton iButton;
         private Tween fadeTween;
 
@@ -51,6 +54,7 @@ namespace Assets.ButtonSystem
 
             button.onClick.AddListener(PlayClickAnimation);
             button.onClick.AddListener(iButton.OnClick);
+            button.onClick.AddListener(PlayClickSE); // 追加
         }
 
         public void PlayClickAnimation()
@@ -69,6 +73,7 @@ namespace Assets.ButtonSystem
         public void OnPointerEnter(PointerEventData eventData)
         {
             PlayMouseOverAnimation();
+            PlayMouseOverSE();
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -87,6 +92,22 @@ namespace Assets.ButtonSystem
         {
             fadeTween.Kill(); // ループを停止
             canvasGroup.DOFade(1f, 0.2f); // 透明度を元に戻す
+        }
+
+        private void PlayMouseOverSE()
+        {
+            if (audioSource != null && mouseOverSE != null)
+            {
+                audioSource.PlayOneShot(mouseOverSE);
+            }
+        }
+
+        private void PlayClickSE() // 追加
+        {
+            if (audioSource != null && clickSE != null)
+            {
+                audioSource.PlayOneShot(clickSE);
+            }
         }
     }
 }

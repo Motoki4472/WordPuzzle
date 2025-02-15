@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace Assets.ButtonSystem
 {
@@ -6,8 +7,9 @@ namespace Assets.ButtonSystem
     {
         public void OnClick()
         {
-            // 音量のスライダーを表示する
-            Debug.Log("HamburgerMenu OnClick");
+            GameObject.Find("MasterVolume").transform.DOLocalMove(new Vector3(70, 147, 0), 0.5f);
+            GameObject.Find("BGMVolume").transform.DOLocalMove(new Vector3(70, 22, 0), 0.5f).SetDelay(0.1f);
+            GameObject.Find("SEVolume").transform.DOLocalMove(new Vector3(70, -103, 0), 0.5f).SetDelay(0.2f);
         }
     }
 }
