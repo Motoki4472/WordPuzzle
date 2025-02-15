@@ -6,8 +6,8 @@ namespace Assets.ButtonSystem
     {
         public void OnClick()
         {
-            // タイトルに戻る
-            Debug.Log("Title OnClick");
+            // タイトル画面に遷移
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Develop/Title");
         }
     }
 }

@@ -47,6 +47,9 @@ namespace Assets.ButtonSystem
                 case 6:
                     iButton = new ExitButton();
                     break;
+                case 7:
+                    iButton = new RetryButton();
+                    break;
             }
 
             button.onClick.AddListener(PlayClickAnimation);
