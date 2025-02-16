@@ -193,10 +193,8 @@ namespace Assets.Rule
                 {
                     y = 0;
                 }
-
             }
-            int wordId = Random.Range(0, 25);
-            string word = ((char)(wordId + 97)).ToString();
+            string word = WordList.GenerateRandomWord(1); // 1文字のランダムワードを生成
             Board[x, y].SetWord(word);
             processSystem.GenerateWordBlockOnBoard(x, y, word, direction);
         }

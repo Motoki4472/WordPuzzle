@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Assets.WordBlock
 {
     public class WordList
     {
+        private Dictionary<char, int> letterFrequencies;
+        private Dictionary<char, double> letterProbabilities;
+        private System.Random random = new System.Random();
         public readonly Dictionary<string, string> _WordList = new Dictionary<string, string>
         {
-                {"ab", "about"},
                 {"abaci", "abacusの複数形"},
                 {"aback", "後へ,後ろに"},
                 {"abaft", "船尾に(へ)"},
@@ -24,7 +27,6 @@ namespace Assets.WordBlock
                 {"abet", "(特に悪い事に)…'を'扇動する,そそのかす《+『名』+『in』+『名』(do『ing』)》"},
                 {"abhor", "…'を'ひどくきらう,嫌悪する"},
                 {"abide", "(ある状態に)とどまる;残る"},
-                {"abl", "ablative"},
                 {"able", "《補語にのみ用いて》《『be able to』 do》(…することが)『できる』"},
                 {"ably", "りっぱに,うまく"},
                 {"abo", "《オーストラリア英語》《俗・禁句》原住民(aborigine)"},
@@ -141,7 +143,6 @@ namespace Assets.WordBlock
                 {"ale", "エール(色が薄いビールの一種;米国では普通のビールより苦くアルコール含有量の多いものをいう)"},
                 {"alee", "(海事用語で)風下に(の)"},
                 {"alert", "『油断のない』,用心深い"},
-                {"alg", "algebra"},
                 {"alga", "藻(も);《複数形で》藻(そう)類(海草などの隠花植物)"},
                 {"algae", "藻類"},
                 {"algal", "藻の,藻類の"},
@@ -149,10 +150,8 @@ namespace Assets.WordBlock
                 {"alibi", "アリバイ,現場不在証明"},
                 {"alien", "『外国の』,異国の;外国人の,在留外国人の"},
                 {"alike", "『同じように』,等しく(similarly)"},
-                {"aline", "=align"},
                 {"alit", "alightの過去・過去分詞"},
                 {"alive", "『生きている』(living)"},
-                {"alk", "alkali"},
                 {"all", "《単数形,または数えられない名詞につけて》(ある一つのものについて,その)『全体の』,全…,…じゅう,…全体"},
                 {"allay", "〈怒り・興奮・心配など〉'を'静める,和らげる"},
                 {"alley", "小路(こうじ),路地"},
@@ -180,7 +179,6 @@ namespace Assets.WordBlock
                 {"amah", "(東洋諸国で)子もり,うば;女中,お手伝い"},
                 {"amass", "…'を'ためる,蓄える"},
                 {"amaze", "…'を'『ひどくびっくりさせる』,驚きあきれさせる"},
-                {"amb", "ambassador"},
                 {"amber", "こはく(琥珀)(宝石に用いる黄褐色の鉱石)"},
                 {"ambit", "周囲"},
                 {"amble", "アンブル,側対歩(馬が片側の両脚を同時に上げて進むゆるやかな歩調)"},
@@ -189,24 +187,19 @@ namespace Assets.WordBlock
                 {"amid", "…の中に;…のまっさい中に"},
                 {"amide", "アミド[基化物]"},
                 {"amigo", "友人"},
-                {"amir", "=emir"},
                 {"amiss", "誤った,不都合な;《否定文で》場違いの"},
                 {"amity", "(人・国などの間の)親善,友好,親和"},
                 {"ammo", "=ammunition"},
-                {"amok", "=amuck"},
                 {"among", "…『の間に』,に囲まれて"},
                 {"amour", "(特に人目をはばかる)恋愛,情事"},
                 {"amp", "ampere[s]"},
                 {"ample", "広い,広々とした"},
                 {"amply", "広々と,広く"},
-                {"amt", "amount"},
                 {"amu", "atomic mass unit 原子質量単位"},
                 {"amuck", "アモク 《急に興奮して殺人を犯す精神障害; 元来マレー人特有のものとされた》"},
                 {"amuse", "(…で)〈人,自分自身〉'を'『楽しませる』,おかしがらせる《+『名』+『with』+『名』,+『名』+『by』 do『ing』》"},
                 {"an", "(次にくる語の発音が母音で始まるときに用いる)"},
                 {"anal", "肛門(こうもん)(anus)の"},
-                {"anat", "anatomical"},
-                {"anc", "ancient"},
                 {"and", "《語・句・節を対等に結んで》…『と』…,…や…,および"},
                 {"anent", "…について,に関して"},
                 {"anew", "《文》新たに,再び"},
@@ -221,17 +214,14 @@ namespace Assets.WordBlock
                 {"anise", "アニス(地中海沿岸産のセリ科の草;実は香味料)"},
                 {"ankh", "(エジプト美術で)輪つき十字形(生殖・長寿の象徴)"},
                 {"ankle", "『足首』,くるぶし"},
-                {"ann", "annals"},
                 {"annex", "(…に)〈さらに大きな物〉'を'付け加える,添える《+『名』+『to』+『名』》"},
                 {"annoy", "《しばしば受動態で》〈物事が〉…'を'『困らせる』,悩ませる,いらいらさせる"},
                 {"annul", "〈法律など〉'を'無効にする;〈命令など〉'を'取り消す(cancel)"},
                 {"anode", "(電気の)陽極(positive pole)"},
-                {"anon", "anonymous"},
                 {"ant", "antenna"},
                 {"ante", "アンティ(ポーカーで新しい札を引く前に出すかけ金)"},
                 {"anti", "《話》(特定の慣習・政策・行動などに)反対する人"},
                 {"antic", "おどけたしぐさ,異様な行動"},
-                {"antiq", "antiquarian"},
                 {"anus", "肛門(こうもん)"},
                 {"anvil", "(かじ屋が使う)金敷き,金床"},
                 {"any", "《疑問文・条件節で》『いくらかの』,何か,だれか;《否定文で》『少しも』,何も,だれも"},
@@ -242,21 +232,14 @@ namespace Assets.WordBlock
                 {"apeak", "(いかり・オールなど)ほぼ垂直な"},
                 {"apex", "頂上,頂点"},
                 {"aphid", "アブラムシ(草木の害虫)(plant louse)"},
-                {"aphis", "=aphid"},
                 {"apish", "(特に行動が)サルのような,馬鹿なことをする"},
-                {"apmt", "appointment"},
                 {"app", "apparatus"},
-                {"appal", "=appall"},
                 {"apple", "『リンゴ』;リンゴの木"},
                 {"apply", "(…に)…'を'『適用する』,応用する《+『名』+『to』+『名』(do『ing』)》"},
-                {"appro", "approbation; approval"},
-                {"appt", "appoint"},
                 {"apron", "『エプロン』,前掛け"},
                 {"apse", "後陣(教会堂の東端に張り出した半円形または多角形の部分)"},
-                {"apt", "apartment"},
                 {"aptly", "適切に"},
                 {"aqua", "水;溶液"},
-                {"ar", "arrival"},
                 {"arbor", "(機械の)軸"},
                 {"arc", "『弧』,円弧"},
                 {"arch", "(建物の)『アーチ』,迫持(せりもち)"},
@@ -269,7 +252,6 @@ namespace Assets.WordBlock
                 {"aria", "(オペラにおける)アリア,詠唱"},
                 {"arid", "(土地などが)乾燥した,不毛の"},
                 {"arise", "〈問題・事件などが〉『起こる』,現れる"},
-                {"arith", "arithmetic"},
                 {"ark", "〈U〉箱舟(Noahが家族や家畜を乗せて大洪水をのがれたという舟)"},
                 {"arm", "(人・猿の)『腕』;(四つ足の動物の前肢の)腕(手首から肩までの間;手はhand)"},
                 {"armed", "武装した"},
@@ -281,7 +263,6 @@ namespace Assets.WordBlock
                 {"arras", "アラス織り(美しい絵模様のあるつづれ織り);〈C〉アラス織りの壁掛け"},
                 {"array", "〈軍隊など〉'を'整列させる,配置する"},
                 {"arrow", "『矢』"},
-                {"arse", "=ass"},
                 {"arson", "放火,放火罪"},
                 {"art", "article"},
                 {"arty", "芸術家気どりの"},
@@ -299,15 +280,12 @@ namespace Assets.WordBlock
                 {"ass", "ロバ"},
                 {"assay", "(金属の品質・鉱石の金属含有量・薬品の)分析,試金"},
                 {"asset", "価値のあるもの,宝"},
-                {"assn", "association"},
-                {"assoc", "associate"},
                 {"aster", "アスター,エゾギク(庭に植えるキク科の一年草)"},
                 {"astir", "(…に)わきたって,ざわめいて《+『at』+『名』》;(…で)にぎわって《+『with』+『名』》"},
                 {"at", "atomic"},
                 {"ate", "eatの過去形"},
                 {"atilt", "《補語にのみ用いて》傾いた,傾斜した"},
                 {"atlas", "『地図帳』"},
-                {"atm", "atmosphere"},
                 {"atoll", "環状サンゴ礁,環礁"},
                 {"atom", "『原子』"},
                 {"atone", "(罪・あやまちなどを)償う,あがなう,埋合せをする《+『for』+『名』》"},
@@ -315,8 +293,6 @@ namespace Assets.WordBlock
                 {"atop", "…の上に"},
                 {"attar", "バラ油,花の精,花のエキス"},
                 {"attic", "『屋根裏』;屋根裏部屋"},
-                {"atty", "attorney"},
-                {"aud", "audit"},
                 {"audio", "(電波の)可聴周波の,低周波の;(テレビの)音声の"},
                 {"audit", "会計検査(監査)"},
                 {"auger", "らせん形のきり(大工用でT字型の柄がついている)"},
@@ -326,7 +302,6 @@ namespace Assets.WordBlock
                 {"aunt", "『おば』"},
                 {"aura", "(人・物がかもし出す)独持の雰囲気"},
                 {"aural", "耳の;聴覚の"},
-                {"auth", "authentic"},
                 {"auto", "《米話》=automobile"},
                 {"aux", "(また『auxil』.)auxiliary"},
                 {"auxin", "オーキシン(植物の成長を調整するホルモン)"},
@@ -681,9 +656,6 @@ namespace Assets.WordBlock
                 {"boxer", "ボクサー,けん闘家"},
                 {"boxy", "箱に似た,箱のような"},
                 {"boy", "『少年,男の子』"},
-                {"bp", "bishop"},
-                {"br", "branch"},
-                {"bra", "=brassiere, brassière"},
                 {"brace", "つっぱり,支柱;かすがい,締め金"},
                 {"bract", "(植物の)ほう(苞)"},
                 {"brad", "(細くて頭の小さい)鉄線くぎ,折れくぎ"},
@@ -1467,14 +1439,10 @@ namespace Assets.WordBlock
                 {"divvy", "…‘を'分ける,分配する《+『up』+『名,』+『名』+『up』》"},
                 {"dizzy", "(人が)めまいがする,ふらふらする"},
                 {"djinn", "=genie"},
-                {"dk", "deck"},
                 {"dl", "deciliter[s]"},
-                {"dlr", "dealer"},
                 {"dlvy", "delivery"},
                 {"dm", "decimeter…decameter"},
-                {"dn", "damn"},
                 {"do", "ditto"},
-                {"doc", "document"},
                 {"dock", "『波止場』,埠頭(ふとう)"},
                 {"dodge", "すばやく身をかわす,さっと動く"},
                 {"dodgy", "危険な"},
@@ -1528,12 +1496,9 @@ namespace Assets.WordBlock
                 {"dowry", "(花嫁の)持参金"},
                 {"dowse", "=douse"},
                 {"doyen", "(団体などの)古参者,長老,大御所"},
-                {"doz", "dozen"},
                 {"doze", "うたた寝をする,居眠りをする《+『off』》"},
                 {"dozen", "『ダース』,12個の組(《略》『doz.,dz.』)"},
                 {"dozy", "眠そうな;眠気を催させる"},
-                {"dpt", "department"},
-                {"dr", "debit"},
                 {"drab", "単調な,退屈な,おもしろくない"},
                 {"drabs", "=dribs"},
                 {"drag", "〈重い物〉‘を'『引きずる』(haul)"},
@@ -2918,6 +2883,7 @@ namespace Assets.WordBlock
                 {"krona", "(複‐nor)クローナ(スウェーデンの貨幣単位)"},
                 {"krone", "クローネ(デンマーク・ノルウェーの貨幣単位)"},
                 {"kt", "karat"},
+                {"ku","Kanazawa University"},
                 {"kudos", "栄光;名声"},
                 {"kudzu", "クズ(葛)(マメ科の多年草・牛馬の飼料)"},
                 {"kulak", "クラーク(ロシア革命以前の富裕な農民・商人)"},
@@ -3190,7 +3156,6 @@ namespace Assets.WordBlock
                 {"lowly", "(身分が)低い,卑しい;みすぼらしい"},
                 {"lox", "サケのくん製の一種"},
                 {"loyal", "『忠実な』,誠実な(faithful)"},
-                {"lt", "light"},
                 {"luau", "ルーアウ(豪勢なハワイ料理の宴会)"},
                 {"lube", "潤滑油[を塗ること]"},
                 {"lucid", "分かりやすい,明快な(clear)"},
@@ -5584,9 +5549,6 @@ namespace Assets.WordBlock
                 {"toxic", "毒性の,有毒な"},
                 {"toxin", "(特にバクテリアの)毒素"},
                 {"toy", "『おもちゃ』,玩具"},
-                {"tp", "township"},
-                {"tpk", "turnpike"},
-                {"tr", "transitive"},
                 {"trace", "〈C〉〈U〉(過去に存在した人・物・事件などの)『跡』,形跡,痕跡;(人・動物・車などの通った)跡,足跡《+of+名》"},
                 {"track", "《しばしば複数形で》(車・船などの)『通った跡』,(人・動物の)『足跡』"},
                 {"tract", "広大な土地(地域),(土地・海・空などの)広がり《+of+名》"},
@@ -6218,9 +6180,11 @@ namespace Assets.WordBlock
                 {"zzz", "グーグー(いびきの音)"}
         };
 
-
         public WordList()
         {
+            letterFrequencies = new Dictionary<char, int>();
+            letterProbabilities = new Dictionary<char, double>();
+            CalculateLetterFrequencies();
         }
 
         public bool IsExistWord(string word)
@@ -6233,5 +6197,55 @@ namespace Assets.WordBlock
             return _WordList[word];
         }
 
+        private void CalculateLetterFrequencies()
+        {
+            // 各アルファベットの出現回数をカウント
+            foreach (var word in _WordList.Keys)
+            {
+                foreach (char c in word)
+                {
+                    if (letterFrequencies.ContainsKey(c))
+                        letterFrequencies[c]++;
+                    else
+                        letterFrequencies[c] = 1;
+                }
+            }
+
+            // 確率を計算
+            int totalLetters = letterFrequencies.Values.Sum();
+            foreach (var kvp in letterFrequencies)
+            {
+                letterProbabilities[kvp.Key] = (double)kvp.Value / totalLetters;
+            }
+        }
+
+        public string GenerateRandomWord(int length)
+        {
+            if (letterProbabilities.Count == 0)
+                return string.Empty;
+
+            char[] generatedWord = new char[length];
+            for (int i = 0; i < length; i++)
+            {
+                generatedWord[i] = GetRandomLetter();
+            }
+
+            return new string(generatedWord);
+        }
+
+        private char GetRandomLetter()
+        {
+            double rand = random.NextDouble();
+            double cumulative = 0.0;
+
+            foreach (var kvp in letterProbabilities)
+            {
+                cumulative += kvp.Value;
+                if (rand < cumulative)
+                    return kvp.Key;
+            }
+
+            return letterProbabilities.Keys.Last(); // 万が一のフォールバック
+        }
     }
 }
