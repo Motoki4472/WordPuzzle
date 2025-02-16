@@ -227,6 +227,8 @@ namespace Assets.Rule
                 CheckConnectVertical(i);
             }
             // ConnectListをログに表示
+            // 文字数多い順でソート
+            ConnectList.Sort((a, b) => b.Length - a.Length);
             for (int i = 0; i < ConnectList.Count; i++)
             {
                 string word = "";
@@ -237,6 +239,7 @@ namespace Assets.Rule
                         word += ConnectList[i][j].GetWord();
                     }
                 }
+                Debug.Log("Connected word: " + word);
             }
 
             Sequence sequence = DOTween.Sequence();
@@ -252,31 +255,34 @@ namespace Assets.Rule
         // 横方向のつながりの検査
         private void CheckConnectHorizontal(int y)
         {
-            for(int i = 0;i < 5;i++)
+            for (int i = 0; i < 5; i++)
             {
-                string word = "";
-                WordBlockOnBoard[] connect = new WordBlockOnBoard[5];
-                for(int j = i;j < 5;j++)
+                for (int length = 2; length <= 5 - i; length++)
                 {
-                    if(Board[j,y].GetWord() == null || Board[i,y].GetWord() == null)
+                    string word = "";
+                    WordBlockOnBoard[] connect = new WordBlockOnBoard[length];
+                    for (int j = 0; j < length; j++)
                     {
-                        break;
+                        if (Board[i + j, y].GetWord() == null)
+                        {
+                            break;
+                        }
+                        word += Board[i + j, y].GetWord();
+                        connect[j] = Board[i + j, y];
                     }
-                    word += Board[j, y].GetWord();
-                    connect[j - i] = Board[j, y];
-                }
-                if(word.Length >= 2)
-                {
-                    ConnectList.Add(connect);
+                    if (word.Length == length)
+                    {
+                        ConnectList.Add(connect);
+                    }
                 }
             }
 
-            //listの重複を削除
-            for(int i = 0;i < ConnectList.Count;i++)
+            // listの重複を削除
+            for (int i = 0; i < ConnectList.Count; i++)
             {
-                for(int j = i + 1;j < ConnectList.Count;j++)
+                for (int j = i + 1; j < ConnectList.Count; j++)
                 {
-                    if(ConnectList[i] == ConnectList[j])
+                    if (ConnectList[i] == ConnectList[j])
                     {
                         ConnectList.RemoveAt(j);
                         j--;
@@ -290,20 +296,23 @@ namespace Assets.Rule
         {
             for (int i = 0; i < 5; i++)
             {
-                string word = "";
-                WordBlockOnBoard[] connect = new WordBlockOnBoard[5];
-                for (int j = i; j < 5; j++)
+                for (int length = 2; length <= 5 - i; length++)
                 {
-                    if (Board[x, j].GetWord() == null || Board[x, i].GetWord() == null)
+                    string word = "";
+                    WordBlockOnBoard[] connect = new WordBlockOnBoard[length];
+                    for (int j = 0; j < length; j++)
                     {
-                        break;
+                        if (Board[x, i + j].GetWord() == null)
+                        {
+                            break;
+                        }
+                        word += Board[x, i + j].GetWord();
+                        connect[j] = Board[x, i + j];
                     }
-                    word += Board[x, j].GetWord();
-                    connect[j - i] = Board[x, j];
-                }
-                if (word.Length >= 2)
-                {
-                    ConnectList.Add(connect);
+                    if (word.Length == length)
+                    {
+                        ConnectList.Add(connect);
+                    }
                 }
             }
 

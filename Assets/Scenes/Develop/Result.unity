@@ -821,8 +821,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonType: 0
   audioSource: {fileID: 488461486}
-  mouseOverSE: {fileID: 8300000, guid: 9475a8ee308f436478b7fc52352ba9d0, type: 3}
-  clickSE: {fileID: 8300000, guid: aa6b47decb53d584c82b9095c11a7cc2, type: 3}
+  mouseOverSE: {fileID: 8300000, guid: 0abc4713ee52bd84f8b6e1e5ce80198e, type: 3}
+  clickSE: {fileID: 8300000, guid: f60de5c66d2384d42b3236afc57bff62, type: 3}
 --- !u!82 &488461486
 AudioSource:
   m_ObjectHideFlags: 0
@@ -832,7 +832,7 @@ AudioSource:
   m_GameObject: {fileID: 488461479}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3987874971960782873, guid: 25b17d739e4c27441b698d960f9fba36, type: 2}
+  OutputAudioMixerGroup: {fileID: -5533416408873194655, guid: f283bfd123646064b8a48957985d10fb, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -2128,8 +2128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonType: 5
   audioSource: {fileID: 488461486}
-  mouseOverSE: {fileID: 8300000, guid: 9475a8ee308f436478b7fc52352ba9d0, type: 3}
-  clickSE: {fileID: 8300000, guid: aa6b47decb53d584c82b9095c11a7cc2, type: 3}
+  mouseOverSE: {fileID: 8300000, guid: 0abc4713ee52bd84f8b6e1e5ce80198e, type: 3}
+  clickSE: {fileID: 8300000, guid: f60de5c66d2384d42b3236afc57bff62, type: 3}
 --- !u!114 &1793676817
 MonoBehaviour:
   m_ObjectHideFlags: 0

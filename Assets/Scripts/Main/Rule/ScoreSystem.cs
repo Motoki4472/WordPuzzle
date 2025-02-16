@@ -13,16 +13,15 @@ namespace Assets.Rule
 
         public void ScoreUpdate()
         {
+            if(addScore > 100)
+            {
+                score += 10;
+                addScore -= 10;
+            }
             if(addScore > 0)
             {
                 score ++;
                 addScore --;
-            }
-
-            if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
-            {
-                addScore += 10;
-                Debug.Log("Space : " + addScore);
             }
 
             SaveHighScore();
