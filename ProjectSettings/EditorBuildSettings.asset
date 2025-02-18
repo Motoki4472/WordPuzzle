@@ -12,11 +12,23 @@ EditorBuildSettings:
     path: Assets/Scenes/Develop/Title.unity
     guid: 3e7e44d010375cd43a3c8f9a3f0acc76
   - enabled: 1
-    path: Assets/Scenes/Develop/Game.unity
+    path: Assets/Scenes/Develop/Endless.unity
     guid: d7103500daaa7ec429c74904d36ee88e
   - enabled: 1
-    path: Assets/Scenes/Develop/Result.unity
+    path: Assets/Scenes/Develop/EndlessResult.unity
     guid: a61f72f2e51acba45a56356730b470cf
+  - enabled: 1
+    path: Assets/Scenes/Develop/Classic.unity
+    guid: 25d437fb1d12741459ec742c7ee4089e
+  - enabled: 1
+    path: Assets/Scenes/Develop/BountyHunt.unity
+    guid: 80842fff723d4054c8e51880ee5ca899
+  - enabled: 1
+    path: Assets/Scenes/Develop/BountyHuntResult.unity
+    guid: 0b9365a432470754da7971f04cd841f0
+  - enabled: 1
+    path: Assets/Scenes/Develop/ClassicResult.unity
+    guid: b87e121a2283b054d906e0d9b2554803
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 20e4d4a754d2e4a4ca1001c1b3a5491a, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: ddcf28d2851d61b4e80f18295283b045, type: 3}

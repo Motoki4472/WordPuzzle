@@ -13,15 +13,18 @@ namespace Assets.Rule
         [SerializeField] private Assets.UISystem.UISystem uiSystem = default;
         [SerializeField] private GenerateWordBlock generateWordBlock = default;
         [SerializeField] private GameObject EndGameEffect = default;
-        [SerializeField] private AudioSource audioSource; // 追加
-        [SerializeField] private AudioClip moveSE; // 追加
-        [SerializeField] private AudioClip generateSE; // 追加
-        [SerializeField] private AudioClip disappearSE; // 追加
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip moveSE;
+        [SerializeField] private AudioClip generateSE;
+        [SerializeField] private AudioClip disappearSE;
         private GameRule gameRule = default;
         private ScoreSystem scoreSystem = default;
         private int turnCount = 0;
+        public int gameMode = 2;
         private ProcessState currentProcessState;
         private ProcessState state;
+        private int classicHighScore = 0;
+        private int endlessHighScore = 0;
         private enum ProcessState
         {
             Ready,
@@ -35,16 +38,50 @@ namespace Assets.Rule
         {
             state = ProcessState.Ready;
             Ready();
+            if (gameMode == 2)
+            {
+                classicHighScore = PlayerPrefs.GetInt("ClassicHighScore", 0);
+            }
+            if (gameMode == 0)
+            {
+                endlessHighScore = PlayerPrefs.GetInt("EndlessHighScore", 0);
+            }
         }
 
         public void Update()
         {
             if (state != ProcessState.Stop)
             {
-                scoreSystem.ScoreUpdate();
+                if (gameRule.GetGameMode() != 1) // BountyHuntModeではない場合のみスコアを更新
+                {
+                    scoreSystem.ScoreUpdate();
+                }
                 uiSystem.SetScoreText(scoreSystem.GetScore());
                 uiSystem.SetTurnText(turnCount);
-                uiSystem.SetHighScoreText(scoreSystem.GetHighScore());
+                // BountyHuntModeのためにRemainingTurnを表示
+                if (gameRule.GetGameMode() == 1)
+                {
+                    uiSystem.SetRemainingTurnText(gameRule.GetRemainingTurn());
+                }
+                if (gameRule.GetGameMode() == 2)
+                {
+                    if (scoreSystem.GetScore() > classicHighScore)
+                    {
+                        classicHighScore = scoreSystem.GetScore();
+                        PlayerPrefs.SetInt("ClassicHighScore", classicHighScore);
+                    }
+                    uiSystem.SetHighScoreText(classicHighScore);
+                    uiSystem.SetRemainingTurnText(gameRule.GetRemainingTurn());
+                }
+                if (gameRule.GetGameMode() == 0)
+                {
+                    if (scoreSystem.GetScore() > endlessHighScore)
+                    {
+                        endlessHighScore = scoreSystem.GetScore();
+                        PlayerPrefs.SetInt("EndlessHighScore", endlessHighScore);
+                    }
+                    uiSystem.SetHighScoreText(endlessHighScore);
+                }
             }
         }
 
@@ -59,21 +96,70 @@ namespace Assets.Rule
             {
                 Debug.Log("ゲーム開始");
             }
+            if (gameMode == 2)
+            {
+                classicHighScore = PlayerPrefs.GetInt("ClassicHighScore", 0);
+            }
+            if (gameMode == 0)
+            {
+                endlessHighScore = PlayerPrefs.GetInt("EndlessHighScore", 0);
+            }
         }
 
         private void GameOver()
         {
-            SceneManager.sceneLoaded += GameSceneLoaded;
-            SceneManager.LoadScene("Scenes/Develop/Result");
+            if (gameMode == 0)
+            {
+                if (scoreSystem.GetScore() > endlessHighScore)
+                {
+                    endlessHighScore = scoreSystem.GetScore();
+                    PlayerPrefs.SetInt("EndlessHighScore", endlessHighScore);
+                }
+                SceneManager.sceneLoaded += EndlessSceneLoaded;
+                SceneManager.LoadScene("Scenes/Develop/EndlessResult");
+            }
+            else if (gameMode == 1)
+            {
+                SceneManager.sceneLoaded += BountyHuntSceneLoaded;
+                SceneManager.LoadScene("Scenes/Develop/BountyHuntResult");
+            }
+            else if (gameMode == 2)
+            {
+                if (scoreSystem.GetScore() > classicHighScore)
+                {
+                    classicHighScore = scoreSystem.GetScore();
+                    PlayerPrefs.SetInt("ClassicHighScore", classicHighScore);
+                }
+                SceneManager.sceneLoaded += ClassicSceneLoaded;
+                SceneManager.LoadScene("Scenes/Develop/ClassicResult");
+            }
+
 
         }
 
-        private void GameSceneLoaded(Scene next, LoadSceneMode mode)
+        private void EndlessSceneLoaded(Scene next, LoadSceneMode mode)
         {
             var ChangeResultText = GameObject.Find("ChangeResultText").GetComponent<ChangeResultText>();
             ChangeResultText.score = scoreSystem.GetScore();
             ChangeResultText.turn = turnCount;
-            SceneManager.sceneLoaded -= GameSceneLoaded;
+            SceneManager.sceneLoaded -= EndlessSceneLoaded;
+        }
+
+        private void BountyHuntSceneLoaded(Scene next, LoadSceneMode mode)
+        {
+            var ChangeBountyHuntResult = GameObject.Find("ChangeResultText").GetComponent<ChangeBountyHuntResultText>();
+            ChangeBountyHuntResult.RemainingTurn = gameRule.GetRemainingTurn();
+            ChangeBountyHuntResult.PassedTurn = turnCount;
+            ChangeBountyHuntResult.BountyList = gameRule.GetBountyList();
+            SceneManager.sceneLoaded -= BountyHuntSceneLoaded;
+        }
+
+        private void ClassicSceneLoaded(Scene next, LoadSceneMode mode)
+        {
+            var ChangeResultText = GameObject.Find("ChangeResultText").GetComponent<ChangeResultText>();
+            ChangeResultText.score = scoreSystem.GetScore();
+            ChangeResultText.turn = turnCount;
+            SceneManager.sceneLoaded -= ClassicSceneLoaded;
         }
 
         // 以下は入力用にカプセル化されたメソッド
@@ -86,7 +172,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.RightBoard();
-                PlayMoveSE(); // 追加
+                PlayMoveSE();
             }
         }
 
@@ -98,7 +184,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.LeftBoard();
-                PlayMoveSE(); // 追加
+                PlayMoveSE();
             }
         }
 
@@ -110,7 +196,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.UpBoard();
-                PlayMoveSE(); // 追加
+                PlayMoveSE();
             }
         }
 
@@ -122,7 +208,7 @@ namespace Assets.Rule
                 scoreSystem.AddTurnCountFactor();
                 state = ProcessState.Processing;
                 gameRule.DownBoard();
-                PlayMoveSE(); // 追加
+                PlayMoveSE();
             }
         }
 
@@ -197,19 +283,29 @@ namespace Assets.Rule
             uiSystem.SetWord(word);
         }
 
+        public void StrikeThroughBountyHuntWord(string word)
+        {
+            uiSystem.StrikeThroughWord(word);
+        }
+
+        public void SetBountyHuntList(List<string> BountyHuntList)
+        {
+            uiSystem.SetBountyHuntList(BountyHuntList);
+        }
+
         // アニメーション関連のメソッド
-        public void GenerateWordBlockOnBoard(int x, int y, string word,int direction)
+        public void GenerateWordBlockOnBoard(int x, int y, string word, int direction)
         {
             generateWordBlock.GenerateWordBlockOnBoard(x, y, word, direction);
-            PlayGenerateSE(); // 追加
+            PlayGenerateSE();
         }
 
         public void DisappearWordBlockOnBoard(List<WordBlockOnBoard> deleteList)
         {
             generateWordBlock.DisappearWordBlockOnBoard(deleteList);
-            if(deleteList.Count > 0)
+            if (deleteList.Count > 0)
             {
-                PlayDisappearSE(); // 追加
+                PlayDisappearSE();
             }
         }
 
@@ -218,7 +314,7 @@ namespace Assets.Rule
             return generateWordBlock.MoveWordBlockOnBoard(x, y, direction);
         }
 
-        private void PlayMoveSE() // 追加
+        private void PlayMoveSE()
         {
             if (audioSource != null && moveSE != null)
             {
@@ -226,7 +322,7 @@ namespace Assets.Rule
             }
         }
 
-        private void PlayGenerateSE() // 追加
+        private void PlayGenerateSE()
         {
             if (audioSource != null && generateSE != null)
             {
@@ -234,12 +330,17 @@ namespace Assets.Rule
             }
         }
 
-        private void PlayDisappearSE() // 追加
+        private void PlayDisappearSE()
         {
             if (audioSource != null && disappearSE != null)
             {
                 audioSource.PlayOneShot(disappearSE);
             }
+        }
+
+        public int GetGameMode()
+        {
+            return gameMode;
         }
     }
 }

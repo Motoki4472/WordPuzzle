@@ -5900,13 +5900,18 @@ namespace Assets.WordBlock
                 {"zool", "zoological"},
                 {"zoom", "〈飛行機が〉急上昇する;(一般に)急上昇する"},
                 {"zzz", "グーグー(いびきの音)"}
+ 
         };
+
+        public List<string> BountyHuntList { get; private set; }
 
         public WordList()
         {
             letterFrequencies = new Dictionary<char, int>();
             letterProbabilities = new Dictionary<char, double>();
+            BountyHuntList = new List<string>();
             CalculateLetterFrequencies();
+            PopulateBountyHuntList();
         }
 
         public bool IsExistWord(string word)
@@ -5968,6 +5973,26 @@ namespace Assets.WordBlock
             }
 
             return letterProbabilities.Keys.Last(); // 万が一のフォールバック
+        }
+
+        private void PopulateBountyHuntList()
+        {
+            AddRandomWordsToBountyHuntList(2, 3);
+            AddRandomWordsToBountyHuntList(3, 3);
+            AddRandomWordsToBountyHuntList(4, 2);
+            AddRandomWordsToBountyHuntList(5, 2);
+        }
+
+        private void AddRandomWordsToBountyHuntList(int wordLength, int count)
+        {
+            var wordsOfLength = _WordList.Keys.Where(word => word.Length == wordLength).ToList();
+            for (int i = 0; i < count; i++)
+            {
+                if (wordsOfLength.Count == 0) break;
+                int randomIndex = random.Next(wordsOfLength.Count);
+                BountyHuntList.Add(wordsOfLength[randomIndex]);
+                wordsOfLength.RemoveAt(randomIndex);
+            }
         }
     }
 }
