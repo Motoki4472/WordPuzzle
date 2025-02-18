@@ -6,7 +6,8 @@ namespace Assets.ButtonSystem
     {
         public void OnClick()
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Scenes/Develop/Game");
+            //　現在のシーンを再読み込み
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
     }
 }

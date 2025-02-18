@@ -10,7 +10,9 @@ namespace Assets.UISystem
         [SerializeField] private TMP_Text scoreText = default;
         [SerializeField] private TMP_Text highScoreText = default;
         [SerializeField] private TMP_Text turnText = default;
+        [SerializeField] private TMP_Text remainingTurnText = default;
         [SerializeField] private TMP_Text[] Words = new TMP_Text[8];
+        [SerializeField] private List<TMP_Text> BountyHuntListTexts = new List<TMP_Text>();
         private List<string> InputWords = new List<string>();
         private bool isAnimating = false;
 
@@ -38,6 +40,11 @@ namespace Assets.UISystem
         public void SetTurnText(int turn)
         {
             turnText.text = turn.ToString();
+        }
+
+        public void SetRemainingTurnText(int remainingTurn)
+        {
+            remainingTurnText.text = remainingTurn.ToString();
         }
 
         public void SetWord(string Word)
@@ -90,6 +97,38 @@ namespace Assets.UISystem
             });
         }
 
+        public void SetBountyHuntList(List<string> BountyHuntList)
+        {
+            for (int i = 0; i < BountyHuntListTexts.Count; i++)
+            {
+                if (i < BountyHuntList.Count)
+                {
+                    BountyHuntListTexts[i].text = BountyHuntList[i].ToUpper();
+                }
+                else
+                {
+                    BountyHuntListTexts[i].text = "";
+                }
+            }
+        }
+
+        public void StrikeThroughWord(string word)
+        {
+            foreach (var text in BountyHuntListTexts)
+            {
+                if (text.text == word.ToUpper())
+                {
+                    Debug.Log("StrikeThroughWord");
+                    text.text = "<s>" + text.text + "</s>";
+                    // DOTweenを使用してフェードアウトアニメーションを追加
+                    text.DOFade(0, 0.5f).OnComplete(() =>
+                    {
+                        text.DOFade(1, 0.5f);
+                    });
+                    break;
+                }
+            }
+        }
 
         public void Update()
         {

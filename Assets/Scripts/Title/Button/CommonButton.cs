@@ -50,6 +50,18 @@ namespace Assets.ButtonSystem
                 case 6:
                     iButton = new ExitButton();
                     break;
+                case 7:
+                    iButton = new RetryButton();
+                    break;
+                case 8:
+                    iButton = new PlayClassic();
+                    break;
+                case 9:
+                    iButton = new PlayEndless();
+                    break;
+                case 10:
+                    iButton = new PlayBountyHunt();
+                    break;
             }
 
             button.onClick.AddListener(PlayClickAnimation);

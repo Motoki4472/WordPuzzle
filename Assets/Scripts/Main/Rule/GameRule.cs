@@ -15,6 +15,9 @@ namespace Assets.Rule
         private List<WordBlockOnBoard> deleteList = new List<WordBlockOnBoard>();
         private WordList WordList = new WordList();
         private ProcessSystem processSystem;
+        private List<string> BountyList = new List<string>();
+        private int gameMode = 0;
+        private int RemainingTurn = -1;
 
         public GameRule(ProcessSystem processSystem)
         {
@@ -27,7 +30,18 @@ namespace Assets.Rule
                 }
             }
             InitialBoard();
-
+            gameMode = processSystem.GetGameMode();
+            if(gameMode == 1)
+            {
+                RemainingTurn = 20;
+                BountyList = WordList.BountyHuntList;
+                Debug.Log("BountyList: " + string.Join(", ", BountyList));
+                processSystem.SetBountyHuntList(BountyList); // BountyHuntListをセット
+            }
+            if(gameMode == 2)
+            {
+                RemainingTurn = 100;
+            }
             DebugLogBoard();
         }
 
@@ -194,13 +208,61 @@ namespace Assets.Rule
                     y = 0;
                 }
             }
-            string word = WordList.GenerateRandomWord(1); // 1文字のランダムワードを生成
+
+            string word = "";
+            if (gameMode == 1 && Random.Range(0, 100) < 25)
+            {
+                List<string> unavailableWords = new List<string>();
+                List<string> availableWords = new List<string>();
+                foreach(var block in Board)
+                {
+                    if(block.GetWord() != null)
+                    {
+                        unavailableWords.Add(block.GetWord());
+                    }
+                }
+                foreach(var Bounty in BountyList)
+                {
+                    foreach(var wordInBounty in Bounty)
+                    {
+                        if (!unavailableWords.Contains(wordInBounty.ToString()))
+                        {
+                            availableWords.Add(wordInBounty.ToString());
+                            break;
+                        }
+                    }
+                }
+                if (availableWords.Count == 0)
+                {
+                    word = WordList.GenerateRandomWord(1);
+                }
+                else
+                {
+                    word = availableWords[Random.Range(0, availableWords.Count)];
+                }
+
+            }
+
+            if (word == "")
+            {
+                word = WordList.GenerateRandomWord(1); // 1文字のランダムワードを生成
+            }
+
             Board[x, y].SetWord(word);
             processSystem.GenerateWordBlockOnBoard(x, y, word, direction);
         }
 
         private void CheckGameEnd()
         {
+            if(gameMode == 1 && BountyList.Count == 0 || RemainingTurn == 0)
+            {
+                // endsceneのステータスを書き換えるか別のシーンを作る
+                processSystem.SetProcessStateToEnd();
+            }
+            if (gameMode == 2 && RemainingTurn == 0)
+            {
+                processSystem.SetProcessStateToEnd();
+            }
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 5; j++)
@@ -218,6 +280,7 @@ namespace Assets.Rule
         private void CheckConnect()
         {
             ConnectList.Clear();
+            RemainingTurn--;
 
             for (int i = 0; i < 5; i++)
             {
@@ -274,19 +337,7 @@ namespace Assets.Rule
                     }
                 }
             }
-
-            // listの重複を削除
-            for (int i = 0; i < ConnectList.Count; i++)
-            {
-                for (int j = i + 1; j < ConnectList.Count; j++)
-                {
-                    if (ConnectList[i] == ConnectList[j])
-                    {
-                        ConnectList.RemoveAt(j);
-                        j--;
-                    }
-                }
-            }
+            RemoveDuplicatesFromConnectList();
         }
 
         // 縦方向のつながりの検査
@@ -313,8 +364,11 @@ namespace Assets.Rule
                     }
                 }
             }
+            RemoveDuplicatesFromConnectList();
+        }
 
-            // listの重複を削除
+        private void RemoveDuplicatesFromConnectList()
+        {
             for (int i = 0; i < ConnectList.Count; i++)
             {
                 for (int j = i + 1; j < ConnectList.Count; j++)
@@ -357,6 +411,24 @@ namespace Assets.Rule
                             deleteList.Add(ConnectList[i][j]);
                         }
                     }
+                    // BountyHuntList内の単語を消すと残りターンが文字数＊5回復
+                    if (BountyList.Contains(word))
+                    {
+                        for (int k = 0; k < word.Length * 10; k++)
+                        {
+                            RemainingTurn++;
+                        }
+                        BountyList.Remove(word);
+                        // アニメーションを追加
+                        processSystem.StrikeThroughBountyHuntWord(word);
+                    }
+                    if(gameMode == 1)
+                    {
+                        for (int k = 0; k < word.Length/1.5f; k++)
+                        {
+                            RemainingTurn++;
+                        }
+                    }
                 }
             }
             if (isCombo)
@@ -386,5 +458,19 @@ namespace Assets.Rule
             processSystem.ResetWordCountFactor();
         }
 
+        public int GetGameMode()
+        {
+            return gameMode;
+        }
+
+        public int GetRemainingTurn()
+        {
+            return RemainingTurn;
+        }
+
+        public List<string> GetBountyList()
+        {
+            return BountyList;
+        }
     }
 }
